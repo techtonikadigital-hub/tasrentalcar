@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --primary-yellow: #FFC928;
+    --primary-yellow-hover: #E5B21E;
+    --brand-black: #111111;
+    --light-grey: #F5F5F5;
+    --text-grey: #666666;
+  }
+
+  body, html, #root, button, input, select, textarea, h1, h2, h3, h4, h5, h6, .font-heading {
+    font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  }
+}
+
+/* Custom smooth transitions */
+.transition-luxury {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Subtle custom scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a3a3a3;
+}
