@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { ShieldCheck, MapPin, Award, CheckCircle, ArrowRight } from 'lucide-react';
+import { VAN_IMAGES } from '../assets/images';
 
 export const AboutPage: React.FC = () => {
   const { settings, setCurrentView } = useApp();
@@ -74,7 +75,7 @@ export const AboutPage: React.FC = () => {
           <div className="lg:col-span-5">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-[#FFC928]">
               <img
-                src="/src/assets/images/aussie_van_fleet_showcase_1792057595502.jpg"
+                src={VAN_IMAGES.fleetShowcase}
                 alt="TAS Car Rental Depot and Fleet"
                 className="w-full h-[450px] object-cover"
               />

@@ -11,12 +11,13 @@ import { BlogSection } from './components/BlogSection';
 import { CtaBanner } from './components/CtaBanner';
 import { CarsListingPage } from './components/CarsListingPage';
 import { AboutPage } from './components/AboutPage';
+import { ServiceAreaPage } from './components/ServiceAreaPage';
 import { BlogPage } from './components/BlogPage';
 import { ContactPage } from './components/ContactPage';
 import { FaqPage } from './components/FaqPage';
 import { FaqSection } from './components/FaqSection';
 import { FleetShowcaseSection } from './components/FleetShowcaseSection';
-import { CarDetailsModal } from './components/CarDetailsModal';
+import { VehicleDetailsPage } from './components/VehicleDetailsPage';
 import { PolicyModal } from './components/PolicyModal';
 import { Toast } from './components/Toast';
 import { SeoStructuredData } from './components/SeoStructuredData';
@@ -69,12 +70,16 @@ const MainAppContent: React.FC = () => {
 
         {currentView === 'cars' && <CarsListingPage />}
 
+        {currentView === 'vehicle-details' && <VehicleDetailsPage />}
+
         {currentView === 'about' && (
           <>
             <AboutPage />
             <TestimonialsSection />
           </>
         )}
+
+        {currentView === 'service-area' && <ServiceAreaPage />}
 
         {currentView === 'faq' && <FaqPage />}
 
@@ -84,14 +89,6 @@ const MainAppContent: React.FC = () => {
       </main>
 
       <Footer />
-
-      {/* Global Vehicle Details & Booking Enquiry Modal */}
-      {selectedCarForDetails && (
-        <CarDetailsModal
-          car={selectedCarForDetails}
-          onClose={() => setSelectedCarForDetails(null)}
-        />
-      )}
 
       {/* Global Terms & Privacy Policy Modal */}
       <PolicyModal />

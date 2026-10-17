@@ -15,8 +15,20 @@ export const CarCard: React.FC<CarCardProps> = ({ car }) => {
 
   return (
     <div className="bg-white rounded-xl border border-neutral-200 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col group h-full w-full">
-      {/* Image container with fixed aspect ratio */}
-      <div className="relative aspect-[16/10] bg-neutral-100 overflow-hidden shrink-0">
+      {/* Image container with fixed aspect ratio - Clickable to open vehicle enquiry */}
+      <div
+        onClick={() => openBookingForCar(car)}
+        className="relative aspect-[16/10] bg-neutral-100 overflow-hidden shrink-0 cursor-pointer"
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openBookingForCar(car);
+          }
+        }}
+        aria-label={`Enquire now for ${car.make} ${car.model}`}
+      >
         <img
           src={resolveCarImage(car.mainImage)}
           alt={`${car.make} ${car.model}`}
@@ -123,7 +135,7 @@ export const CarCard: React.FC<CarCardProps> = ({ car }) => {
           {/* Action Button */}
           <button
             onClick={() => openBookingForCar(car)}
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg text-xs font-bold bg-[#FFFFFF] hover:bg-[#E5B21E] text-[#111111] transition-luxury cursor-pointer shadow-sm shrink-0 whitespace-nowrap"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg text-xs font-bold bg-[#FFC928] hover:bg-[#E5B21E] text-black transition-luxury cursor-pointer shadow-sm shrink-0 whitespace-nowrap"
           >
             <span>{isAvailable ? 'Enquire Now' : 'Details'}</span>
             <ArrowRight className="w-3.5 h-3.5" />

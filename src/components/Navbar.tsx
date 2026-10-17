@@ -10,6 +10,7 @@ export const Navbar: React.FC = () => {
     { id: 'home', label: 'Home' },
     { id: 'cars', label: 'Our Cars' },
     { id: 'about', label: 'About Us' },
+    { id: 'service-area', label: 'Service Area' },
     { id: 'faq', label: 'FAQ' },
     { id: 'blog', label: 'Blog' },
     { id: 'contact', label: 'Contact' },

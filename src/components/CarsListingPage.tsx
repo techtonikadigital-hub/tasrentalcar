@@ -13,6 +13,7 @@ import {
   X,
   Check,
 } from 'lucide-react';
+import { VAN_IMAGES } from '../assets/images';
 
 export const CarsListingPage: React.FC = () => {
   const { publicCars, settings } = useApp();
@@ -133,7 +134,7 @@ export const CarsListingPage: React.FC = () => {
   // Background image for "Our Passenger Van Fleet" header section
   const fleetBannerImg =
     settings.fleetBannerImageUrl ||
-    '/src/assets/images/toyota_hiace_12_seater_1792057594958.jpg';
+    VAN_IMAGES.hiace12;
 
   return (
     <div className="bg-white min-h-screen">

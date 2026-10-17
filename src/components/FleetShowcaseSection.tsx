@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { ShieldCheck, Award, KeyRound, Sparkles, ArrowRight, Phone, CheckCircle2 } from 'lucide-react';
+import { VAN_IMAGES } from '../assets/images';
 
 export const FleetShowcaseSection: React.FC = () => {
   const { settings, setCurrentView } = useApp();
@@ -20,7 +21,7 @@ export const FleetShowcaseSection: React.FC = () => {
             <div className="relative rounded-2xl overflow-hidden border border-neutral-300 shadow-2xl bg-neutral-950 group">
               <div className="relative h-[340px] sm:h-[420px] md:h-[480px] w-full overflow-hidden">
                 <img
-                  src="/src/assets/images/aussie_van_fleet_showcase_1792057595502.jpg"
+                  src={VAN_IMAGES.fleetShowcase}
                   alt="Aussie Passenger Van Hire - Toyota HiAce 12 Seater and Kia Carnival 7 Seater"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"

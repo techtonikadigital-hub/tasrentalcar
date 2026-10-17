@@ -8,34 +8,42 @@ interface ToastState {
   type: 'success' | 'error' | 'info';
 }
 
-export type AppView = 'home' | 'cars' | 'about' | 'faq' | 'blog' | 'contact' | 'admin';
+export type AppView = 'home' | 'cars' | 'about' | 'service-area' | 'faq' | 'blog' | 'contact' | 'admin' | 'vehicle-details';
 
 export const getViewFromUrl = (): AppView => {
   if (typeof window === 'undefined') return 'home';
 
-  // 1. Pathname check (e.g. /cars, /about, /faq, /blog, /contact, /admin)
+  // 1. Pathname check (e.g. /cars, /about, /service-area, /faq, /blog, /contact, /admin, /car/:id)
   const pathname = window.location.pathname.toLowerCase().replace(/^\/+|\/+$/g, '');
+  if (pathname.startsWith('car/') || pathname.startsWith('cars/') || pathname.startsWith('vehicle/')) return 'vehicle-details';
+  if (pathname === 'car' || pathname === 'vehicle') return 'vehicle-details';
   if (pathname === 'cars' || pathname === 'fleet') return 'cars';
   if (pathname === 'about' || pathname === 'about-us') return 'about';
+  if (pathname === 'service-area' || pathname === 'service-areas' || pathname === 'servicearea') return 'service-area';
   if (pathname === 'faq' || pathname === 'faqs') return 'faq';
   if (pathname === 'blog' || pathname === 'journal') return 'blog';
   if (pathname === 'contact' || pathname === 'contact-us') return 'contact';
   if (pathname === 'admin' || pathname === 'dashboard') return 'admin';
 
-  // 2. Hash check (e.g. #/cars, #cars, #faq)
+  // 2. Hash check (e.g. #/cars, #cars, #faq, #car/:id)
   const hash = window.location.hash.toLowerCase().replace(/^#\/?/, '');
+  if (hash.startsWith('car/') || hash.startsWith('cars/') || hash.startsWith('vehicle/')) return 'vehicle-details';
   if (hash === 'cars' || hash === 'fleet') return 'cars';
   if (hash === 'about') return 'about';
+  if (hash === 'service-area' || hash === 'service-areas') return 'service-area';
   if (hash === 'faq' || hash === 'faqs') return 'faq';
   if (hash === 'blog' || hash === 'journal') return 'blog';
   if (hash === 'contact') return 'contact';
   if (hash === 'admin' || hash === 'secure-admin') return 'admin';
 
-  // 3. Query params check (e.g. ?page=cars, ?page=faq)
+  // 3. Query params check (e.g. ?page=cars, ?page=faq, ?car=:id)
   const params = new URLSearchParams(window.location.search);
+  if (params.get('car') || params.get('vehicle')) return 'vehicle-details';
   const pageParam = params.get('page') || params.get('view');
+  if (pageParam === 'vehicle-details' || pageParam === 'vehicle' || pageParam === 'car') return 'vehicle-details';
   if (pageParam === 'cars') return 'cars';
   if (pageParam === 'about') return 'about';
+  if (pageParam === 'service-area' || pageParam === 'service-areas') return 'service-area';
   if (pageParam === 'faq') return 'faq';
   if (pageParam === 'blog') return 'blog';
   if (pageParam === 'contact') return 'contact';
@@ -120,13 +128,64 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+export const resolveCarFromUrl = (allCars: Car[]): Car | null => {
+  if (typeof window === 'undefined' || !allCars || allCars.length === 0) return null;
+  const params = new URLSearchParams(window.location.search);
+  const hash = window.location.hash;
+  const pathParts = window.location.pathname.replace(/^\/+|\/+$/g, '').split('/');
+  let carIdFromUrl: string | null = null;
+
+  if (
+    (pathParts[0]?.toLowerCase() === 'car' ||
+      pathParts[0]?.toLowerCase() === 'cars' ||
+      pathParts[0]?.toLowerCase() === 'vehicle') &&
+    pathParts[1]
+  ) {
+    carIdFromUrl = pathParts[1];
+  }
+  if (!carIdFromUrl) {
+    carIdFromUrl = params.get('car') || params.get('vehicle') || params.get('enquiry') || params.get('id');
+  }
+  if (!carIdFromUrl && hash) {
+    const cleanHash = hash.replace(/^#\/?/, '');
+    const hashParts = cleanHash.split('/');
+    if (
+      (hashParts[0]?.toLowerCase() === 'car' || hashParts[0]?.toLowerCase() === 'vehicle') &&
+      hashParts[1]
+    ) {
+      carIdFromUrl = hashParts[1];
+    }
+  }
+
+  if (carIdFromUrl) {
+    const target = decodeURIComponent(carIdFromUrl).trim().toLowerCase();
+    const byId = allCars.find((c) => c.id.toLowerCase() === target);
+    if (byId) return byId;
+
+    const bySlug = allCars.find((c) => {
+      const slug = `${c.make}-${c.model}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      return slug === target || slug.replace(/^-+|-+$/g, '') === target;
+    });
+    if (bySlug) return bySlug;
+
+    const byPartial = allCars.find((c) => {
+      const slug = `${c.make}-${c.model}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      return slug.includes(target) || target.includes(c.id.toLowerCase()) || c.id.toLowerCase().includes(target);
+    });
+    if (byPartial) return byPartial;
+  }
+  return null;
+};
+
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentView, setCurrentViewInternal] = useState<AppView>(() => getViewFromUrl());
-  const [selectedCarForDetails, setSelectedCarForDetails] = useState<Car | null>(null);
+  const [selectedCarForDetails, setSelectedCarForDetailsInternal] = useState<Car | null>(() => {
+    return resolveCarFromUrl(storage.getCars());
+  });
   const [selectedBlogPost, setSelectedBlogPost] = useState<BlogPost | null>(null);
   const [openPolicyModal, setOpenPolicyModal] = useState<'privacy' | 'terms' | null>(null);
 
-  const [cars, setCars] = useState<Car[]>([]);
+  const [cars, setCars] = useState<Car[]>(() => storage.getCars());
   const [leads, setLeads] = useState<Lead[]>([]);
   const [settings, setSettings] = useState<WebsiteSettings>(storage.getSettings());
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
@@ -155,15 +214,47 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     };
   }, [syncData]);
 
+  // Navigates directly to the dedicated individual vehicle page
+  const openBookingForCar = useCallback((car: Car | null) => {
+    if (!car) return;
+    setSelectedCarForDetailsInternal(car);
+    setCurrentViewInternal('vehicle-details');
+    if (typeof window !== 'undefined') {
+      const targetPath = `/car/${car.id}`;
+      window.history.pushState({ view: 'vehicle-details', carId: car.id }, '', targetPath);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, []);
+
+  const setSelectedCarForDetails = useCallback((car: Car | null) => {
+    setSelectedCarForDetailsInternal(car);
+    if (car) {
+      setCurrentViewInternal('vehicle-details');
+      if (typeof window !== 'undefined') {
+        const targetPath = `/car/${car.id}`;
+        window.history.pushState({ view: 'vehicle-details', carId: car.id }, '', targetPath);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    } else {
+      setCurrentViewInternal('cars');
+      if (typeof window !== 'undefined') {
+        window.history.pushState({ view: 'cars' }, '', '/cars');
+      }
+    }
+  }, []);
+
   // Sync URL routing and check admin access on mount, popstate and hashchange
   useEffect(() => {
     const handleUrlRouteSync = () => {
       if (typeof window === 'undefined') return;
-      const params = new URLSearchParams(window.location.search);
-      const secretParam = params.get('admin_access') || params.get('admin_key') || params.get('portal');
-      const hash = window.location.hash;
-      const currentSettings = storage.getSettings();
-      const expectedKey = currentSettings.secretAdminKey || 'las-hq-secure-key-928';
+      const allCars = storage.getCars();
+      const matchedCar = resolveCarFromUrl(allCars);
+      if (matchedCar) {
+        setSelectedCarForDetailsInternal(matchedCar);
+        setCurrentViewInternal('vehicle-details');
+        setHasSecretAdminAccess(true);
+        return;
+      }
 
       setHasSecretAdminAccess(true);
       const detectedView = getViewFromUrl();
@@ -184,13 +275,19 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     (view: AppView) => {
       setCurrentViewInternal(view);
       if (typeof window !== 'undefined') {
-        const targetPath = view === 'home' ? '/' : `/${view}`;
+        const targetPath =
+          view === 'home'
+            ? '/'
+            : view === 'vehicle-details' && selectedCarForDetails
+            ? `/car/${selectedCarForDetails.id}`
+            : `/${view}`;
         if (window.location.pathname !== targetPath) {
           window.history.pushState({ view }, '', targetPath);
         }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     },
-    []
+    [selectedCarForDetails]
   );
 
   const getSecretAdminUrl = useCallback(() => {
@@ -219,6 +316,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       case 'about':
         pageTitle = `About Us | ${baseTitle} Revesby`;
         metaDesc = `Learn about TAS Car Rental based at ${settings.physicalAddress}. Simple passenger van hire on a normal car licence.`;
+        break;
+      case 'service-area':
+        pageTitle = `Van Hire Service Areas Across Sydney | ${baseTitle} Revesby`;
+        metaDesc = `XPDX / TAS Van Hire Sydney service areas. Passenger van and commercial van hire depot at ${settings.physicalAddress} with rapid access across Canterbury-Bankstown, Liverpool, Sydney Airport, Parramatta & Greater Sydney.`;
+        break;
+      case 'vehicle-details':
+        pageTitle = selectedCarForDetails
+          ? `${selectedCarForDetails.year} ${selectedCarForDetails.make} ${selectedCarForDetails.model} Hire | ${baseTitle}`
+          : `Vehicle Hire Details & Enquiry | ${baseTitle}`;
+        metaDesc = selectedCarForDetails
+          ? `Enquire and hire the ${selectedCarForDetails.year} ${selectedCarForDetails.make} ${selectedCarForDetails.model} from ${settings.physicalAddress}. ${selectedCarForDetails.shortDescription}`
+          : `Hire passenger vans and vehicles at ${settings.physicalAddress}. Call ${settings.phoneNumber}.`;
         break;
       case 'blog':
         pageTitle = selectedBlogPost
@@ -266,10 +375,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setTimeout(() => {
       setToast((prev) => (prev?.id === id ? null : prev));
     }, 4000);
-  }, []);
-
-  const openBookingForCar = useCallback((car: Car | null) => {
-    setSelectedCarForDetails(car);
   }, []);
 
   const formatCurrency = useCallback(

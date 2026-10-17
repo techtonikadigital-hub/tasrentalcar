@@ -3,6 +3,7 @@ import { useApp } from '../../context/AppContext';
 import { Car, CarStatus, FuelType, TransmissionType, VehicleCategory } from '../../types';
 import { storage } from '../../services/storage';
 import { fileToDataUrl, filesToDataUrls } from '../../utils/imageUpload';
+import { VAN_IMAGES } from '../../assets/images';
 import {
   Plus,
   Edit,
@@ -202,7 +203,7 @@ export const AdminCarManagement: React.FC<AdminCarManagementProps> = ({
       .map((f) => f.trim())
       .filter((f) => f.length > 0);
 
-    const fallbackImage = '/src/assets/images/toyota_hiace_12_seater_1792057594958.jpg';
+    const fallbackImage = VAN_IMAGES.hiace12;
     const effectiveMainImage = mainImage || (galleryImages.length > 0 ? galleryImages[0] : fallbackImage);
     const effectiveGallery = galleryImages.length > 0 ? galleryImages : [effectiveMainImage];
 

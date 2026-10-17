@@ -117,17 +117,28 @@ export const BlogPage: React.FC = () => {
           {/* Featured Car Callout */}
           {featuredCar && (
             <div className="mt-12 p-6 rounded-2xl bg-[#111111] text-white border border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
-              <div className="flex items-center gap-4">
+              <div
+                onClick={() => openBookingForCar(featuredCar)}
+                className="flex items-center gap-4 cursor-pointer group/feat"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openBookingForCar(featuredCar);
+                  }
+                }}
+              >
                 <img
                   src={featuredCar.mainImage}
                   alt={featuredCar.model}
-                  className="w-24 h-16 object-cover rounded-lg border border-neutral-700 shrink-0"
+                  className="w-24 h-16 object-cover rounded-lg border border-neutral-700 shrink-0 group-hover/feat:scale-105 transition-transform"
                 />
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#FFC928] block">
                     Featured Vehicle in This Guide
                   </span>
-                  <h4 className="text-lg font-bold text-white font-heading">
+                  <h4 className="text-lg font-bold text-white font-heading group-hover/feat:text-[#FFC928] transition-colors">
                     {featuredCar.make} {featuredCar.model}
                   </h4>
                   <p className="text-xs text-neutral-400">Available for collection at our Revesby depot</p>

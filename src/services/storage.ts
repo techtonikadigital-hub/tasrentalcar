@@ -13,7 +13,7 @@ const STORAGE_KEYS = {
   TESTIMONIALS: 'tas_testimonials_v4',
 };
 
-const FLEET_SYNC_KEY = 'tas_fleet_sync_v8_published_images_fixed';
+const FLEET_SYNC_KEY = 'tas_fleet_sync_v9_xpdx_multigallery';
 
 const LEGACY_STORAGE_KEYS = {
   CARS: 'aussie_vans_v3',
@@ -51,13 +51,13 @@ class StorageService {
 
     // Force refresh fleet when fleet specifications or rates change
     const syncStatus = localStorage.getItem(FLEET_SYNC_KEY);
-    if (!syncStatus || syncStatus !== 'v8_published_images_fixed') {
+    if (!syncStatus || syncStatus !== 'v9_xpdx_multigallery') {
       localStorage.setItem(STORAGE_KEYS.CARS, JSON.stringify(INITIAL_CARS));
       localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(INITIAL_SETTINGS));
       localStorage.setItem(STORAGE_KEYS.ADMIN_USER, JSON.stringify(INITIAL_ADMIN_USER));
       localStorage.setItem(STORAGE_KEYS.LEADS, JSON.stringify(INITIAL_LEADS));
       localStorage.setItem(STORAGE_KEYS.BLOGS, JSON.stringify(INITIAL_BLOG_POSTS));
-      localStorage.setItem(FLEET_SYNC_KEY, 'v8_published_images_fixed');
+      localStorage.setItem(FLEET_SYNC_KEY, 'v9_xpdx_multigallery');
     } else if (!localStorage.getItem(STORAGE_KEYS.CARS)) {
       localStorage.setItem(STORAGE_KEYS.CARS, JSON.stringify(INITIAL_CARS));
     }

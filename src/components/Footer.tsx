@@ -119,6 +119,17 @@ export const Footer: React.FC = () => {
               <li>
                 <button
                   onClick={() => {
+                    setCurrentView('service-area');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="hover:text-[#FFC928] transition-colors cursor-pointer"
+                >
+                  Service Area Coverage
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
                     setCurrentView('blog');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}

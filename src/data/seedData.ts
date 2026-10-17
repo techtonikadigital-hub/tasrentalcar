@@ -18,6 +18,8 @@ export const INITIAL_CARS: Car[] = [
     gallery: [
       VAN_IMAGES.hiace12,
       VAN_IMAGES.fleetShowcase,
+      VAN_IMAGES.luxuryShowcase,
+      VAN_IMAGES.cargoVan,
     ],
     status: 'Active',
     featured: true,
@@ -52,6 +54,8 @@ export const INITIAL_CARS: Car[] = [
     mainImage: VAN_IMAGES.carnival,
     gallery: [
       VAN_IMAGES.carnival,
+      VAN_IMAGES.luxuryShowcase,
+      VAN_IMAGES.estima,
       VAN_IMAGES.fleetShowcase,
     ],
     status: 'Active',
@@ -87,6 +91,8 @@ export const INITIAL_CARS: Car[] = [
     mainImage: VAN_IMAGES.carnival,
     gallery: [
       VAN_IMAGES.carnival,
+      VAN_IMAGES.luxuryShowcase,
+      VAN_IMAGES.estima,
       VAN_IMAGES.fleetShowcase,
     ],
     status: 'Active',
@@ -122,7 +128,9 @@ export const INITIAL_CARS: Car[] = [
     mainImage: VAN_IMAGES.carnival,
     gallery: [
       VAN_IMAGES.carnival,
+      VAN_IMAGES.estima,
       VAN_IMAGES.fleetShowcase,
+      VAN_IMAGES.luxuryShowcase,
     ],
     status: 'Active',
     featured: true,
@@ -157,7 +165,9 @@ export const INITIAL_CARS: Car[] = [
     mainImage: VAN_IMAGES.cargoVan,
     gallery: [
       VAN_IMAGES.cargoVan,
+      VAN_IMAGES.renaultMaster,
       VAN_IMAGES.fleetShowcase,
+      VAN_IMAGES.hiace12,
     ],
     status: 'Active',
     featured: true,
@@ -192,7 +202,9 @@ export const INITIAL_CARS: Car[] = [
     mainImage: VAN_IMAGES.renaultMaster,
     gallery: [
       VAN_IMAGES.renaultMaster,
+      VAN_IMAGES.cargoVan,
       VAN_IMAGES.fleetShowcase,
+      VAN_IMAGES.hiace12,
     ],
     status: 'Active',
     featured: true,
@@ -228,6 +240,8 @@ export const INITIAL_CARS: Car[] = [
     gallery: [
       VAN_IMAGES.cargoVan,
       VAN_IMAGES.fleetShowcase,
+      VAN_IMAGES.hiace12,
+      VAN_IMAGES.renaultMaster,
     ],
     status: 'Active',
     featured: false,
@@ -262,6 +276,8 @@ export const INITIAL_CARS: Car[] = [
     mainImage: VAN_IMAGES.estima,
     gallery: [
       VAN_IMAGES.estima,
+      VAN_IMAGES.carnival,
+      VAN_IMAGES.luxuryShowcase,
       VAN_IMAGES.fleetShowcase,
     ],
     status: 'Active',
@@ -298,6 +314,8 @@ export const INITIAL_CARS: Car[] = [
     gallery: [
       VAN_IMAGES.cargoVan,
       VAN_IMAGES.fleetShowcase,
+      VAN_IMAGES.hiace12,
+      VAN_IMAGES.renaultMaster,
     ],
     status: 'Active',
     featured: false,
